@@ -13,7 +13,17 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        return Question::all();
+        $questions = Question::all();
+
+        $questions = $questions->map(function($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'options' => $item->options
+            ];
+        });
+
+        return $questions;
     }
 
     /**
