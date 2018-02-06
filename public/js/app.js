@@ -978,8 +978,8 @@ module.exports = __webpack_require__(41);
  */
 
 __webpack_require__(11);
-
 window.Vue = __webpack_require__(34);
+window._ = __webpack_require__(12);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -40716,6 +40716,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     created: function created() {
@@ -40724,7 +40726,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             question: {},
-            option: ''
+            option: '',
+            finish: false
         };
     },
 
@@ -40744,10 +40747,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 option: this.option
             };
             axios.put('/api/questions/' + this.question.id + '/answer', data).then(function (response) {
-                console.log(response.data);
-                if (response.data) {
-                    _this2.question = response.data;
-                    _this2.option = '';
+                _this2.question = response.data;
+                _this2.option = '';
+
+                if (_.isEmpty(response.data)) {
+                    _this2.finish = true;
                 }
             });
         }
@@ -40762,79 +40766,82 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col" }, [
-        _c("div", { staticClass: "card" }, [
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              _c("h5", { staticClass: "card-title" }, [
-                _vm._v(_vm._s(_vm.question.title))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "card-text" }),
-              _vm._l(_vm.question.options, function(opt) {
-                return _c("div", { staticClass: "form-check" }, [
-                  _c("input", {
-                    directives: [
+  return _c("div", { staticClass: "question" }, [
+    _c("div", { staticClass: "card" }, [
+      _c(
+        "div",
+        { staticClass: "card-body" },
+        [
+          !_vm.finish
+            ? [
+                _c("h5", { staticClass: "card-title" }, [
+                  _vm._v(_vm._s(_vm.question.title))
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "card-text" }),
+                _vm._l(_vm.question.options, function(opt) {
+                  return _c("div", { staticClass: "form-check" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.option,
+                          expression: "option"
+                        }
+                      ],
+                      staticClass: "form-check-input",
+                      attrs: { id: opt.id, type: "radio", name: "option" },
+                      domProps: {
+                        value: opt.id,
+                        checked: _vm._q(_vm.option, opt.id)
+                      },
+                      on: {
+                        change: function($event) {
+                          _vm.option = opt.id
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.option,
-                        expression: "option"
-                      }
-                    ],
-                    staticClass: "form-check-input",
-                    attrs: { id: opt.id, type: "radio", name: "option" },
-                    domProps: {
-                      value: opt.id,
-                      checked: _vm._q(_vm.option, opt.id)
-                    },
+                        staticClass: "form-check-label",
+                        attrs: { for: opt.id }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(opt.title) +
+                            "\n                        "
+                        )
+                      ]
+                    )
+                  ])
+                }),
+                _vm._v(" "),
+                _c("p"),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    class: ["btn btn-primary", { disabled: !_vm.option }],
+                    attrs: { href: "" },
                     on: {
-                      change: function($event) {
-                        _vm.option = opt.id
+                      click: function($event) {
+                        $event.stopPropagation()
+                        $event.preventDefault()
+                        _vm.answerQuestion()
                       }
                     }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    { staticClass: "form-check-label", attrs: { for: opt.id } },
-                    [
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(opt.title) +
-                          "\n                        "
-                      )
-                    ]
-                  )
-                ])
-              }),
-              _vm._v(" "),
-              _c("p"),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  class: ["btn btn-primary", { disabled: !_vm.option }],
-                  attrs: { href: "" },
-                  on: {
-                    click: function($event) {
-                      $event.stopPropagation()
-                      $event.preventDefault()
-                      _vm.answerQuestion()
-                    }
-                  }
-                },
-                [_vm._v("ANSWER")]
-              )
-            ],
-            2
-          )
-        ])
-      ])
+                  },
+                  [_vm._v("ANSWER")]
+                )
+              ]
+            : [_vm._v("\n                The End!\n            ")]
+        ],
+        2
+      )
     ])
   ])
 }

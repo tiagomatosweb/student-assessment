@@ -71,7 +71,7 @@ class QuestionController extends Controller
      * @param string $answerId
      * @return bool
      */
-    public function checkAnswer(Question $q, $answerId = '')
+    private function checkAnswer(Question $q, $answerId = '')
     {
         $options = $q->options;
         $correctAnswer = $options->first(function($item) {
@@ -89,7 +89,7 @@ class QuestionController extends Controller
      * Get next question based on the current question answer
      * @param Question $question
      */
-    public function getNextQuestion($qId, $isCorrect)
+    private function getNextQuestion($qId, $isCorrect)
     {
         $nextQuestionId = 0;
         if ($qId == 1) {
@@ -118,6 +118,6 @@ class QuestionController extends Controller
                 $nextQuestionId = '';
             }
         }
-        return !empty($nextQuestionId) ? $this->getQuestion($nextQuestionId) : [];
+        return !empty($nextQuestionId) ? $this->getQuestion($nextQuestionId) : '';
     }
 }

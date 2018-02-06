@@ -1,12 +1,11 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ question.title }}</h5>
+    <div class="question">
+        <div class="card">
+            <div class="card-body">
+                <template v-if="!finish">
+                    <h5 class="card-title">{{ question.title }}</h5>
 
-                        <p class="card-text">
+                    <p class="card-text">
                         <div v-for="opt in question.options"
                              class="form-check">
                             <input v-model="option"
@@ -18,13 +17,16 @@
                                 {{ opt.title }}
                             </label>
                         </div>
-                        </p>
+                    </p>
 
-                        <a @click.stop.prevent="answerQuestion()"
-                           :class="['btn btn-primary', { 'disabled': !option }]"
-                           href>ANSWER</a>
-                    </div>
-                </div>
+                    <a @click.stop.prevent="answerQuestion()"
+                       :class="['btn btn-primary', { 'disabled': !option }]"
+                       href>ANSWER</a>
+                </template>
+
+                <template v-else>
+                    The End!
+                </template>
             </div>
         </div>
     </div>
@@ -40,6 +42,7 @@
             return {
                 question: {},
                 option: '',
+                finish: false
             };
         },
 
@@ -55,10 +58,11 @@
                     option: this.option
                 };
                 axios.put('/api/questions/'+this.question.id+'/answer', data).then((response) => {
-                    console.log(response.data);
-                    if (response.data) {
-                        this.question = response.data;
-                        this.option = '';
+                    this.question = response.data;
+                    this.option = '';
+
+                    if (_.isEmpty(response.data)) {
+                        this.finish = true;
                     }
                 });
             },

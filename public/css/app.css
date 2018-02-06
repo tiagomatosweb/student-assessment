@@ -9994,3 +9994,14 @@ a.text-dark:focus {
   }
 }
 
+.question {
+  width: 100%;
+  margin: 100px auto;
+}
+
+@media (min-width: 576px) {
+  .question {
+    width: 300px;
+  }
+}
+

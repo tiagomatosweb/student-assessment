@@ -42,6 +42,5 @@ class QuestionTest extends TestCase
         $this->assertTrue(is_array($result));
         $this->assertTrue(!empty($result));
         $this->assertTrue(isset($result['options']));
-        $this->assertTrue(true);
     }
 }
